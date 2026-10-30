@@ -1,0 +1,23 @@
+# Template for application.properties — copy to application.properties and fill in real values.
+# The real application.properties is git-ignored (contains DB password and JWT secret).
+# Generate a JWT secret with: openssl rand -base64 32
+
+spring.application.name=student-performance-intelligence-system
+
+spring.datasource.url=JDBC:mysql://localhost:3306/student_performance_db
+spring.datasource.username=root
+spring.datasource.password=YOUR_DB_PASSWORD
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+server.port=8080
+
+jwt.secret=YOUR_BASE64_256BIT_SECRET
+jwt.expiration=3600000
+
+# Python AI/ML inference service
+ai.service.url=http://127.0.0.1:5001
+ai.service.enabled=true

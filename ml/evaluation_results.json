@@ -1,0 +1,61 @@
+{
+  "dataset": {
+    "name": "UCI Student Performance - Mathematics (student-mat.csv)",
+    "n_rows_used": 395,
+    "performance_features": [
+      "G1",
+      "G2",
+      "studytime",
+      "failures",
+      "absences"
+    ],
+    "risk_features": [
+      "G1",
+      "G2",
+      "studytime",
+      "failures",
+      "absences"
+    ]
+  },
+  "performance_regressor": {
+    "type": "RandomForestRegressor",
+    "hyperparameters": {
+      "n_estimators": 200,
+      "max_depth": 8,
+      "random_state": 42
+    },
+    "target": "G3 (final grade, 0-20 scale)",
+    "split": "80/20 train_test_split, random_state=42, not stratified",
+    "test_size": 79,
+    "metrics": {
+      "mae": 1.047878,
+      "rmse": 1.619018
+    }
+  },
+  "risk_classifier": {
+    "type": "RandomForestClassifier",
+    "hyperparameters": {
+      "n_estimators": 200,
+      "max_depth": 8,
+      "class_weight": "balanced",
+      "random_state": 42
+    },
+    "target": "at_risk = 1 if G3 < 10 else 0 (pass threshold per train_models.py)",
+    "split": "80/20 train_test_split, random_state=42, stratified on target",
+    "test_size": 79,
+    "train_class_counts": {
+      "0": 212,
+      "1": 104
+    },
+    "test_class_counts": {
+      "0": 53,
+      "1": 26
+    },
+    "metrics": {
+      "accuracy": 0.911392,
+      "precision_macro": 0.89708,
+      "recall_macro": 0.904572,
+      "f1_macro": 0.900629
+    }
+  }
+}

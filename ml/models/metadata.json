@@ -1,0 +1,28 @@
+{
+  "dataset": "UCI Student Performance (student-mat.csv)",
+  "performance_model": {
+    "type": "RandomForestRegressor",
+    "target": "G3 (final grade, 0-20)",
+    "features": [
+      "G1",
+      "G2",
+      "studytime",
+      "failures",
+      "absences"
+    ],
+    "mae": 1.0479,
+    "r2": 0.8722
+  },
+  "risk_model": {
+    "type": "RandomForestClassifier",
+    "target": "at_risk = G3 < 10",
+    "features": [
+      "G1",
+      "G2",
+      "studytime",
+      "failures",
+      "absences"
+    ],
+    "accuracy": 0.9114
+  }
+}

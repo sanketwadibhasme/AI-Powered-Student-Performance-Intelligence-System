@@ -1,0 +1,13 @@
+package com.sanket.studentperformanceintelligencesystem;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class StudentPerformanceIntelligenceSystemApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}

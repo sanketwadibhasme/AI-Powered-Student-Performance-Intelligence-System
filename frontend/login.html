@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login — Student Performance Intelligence System</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Arial, sans-serif; }
+body { min-height:100vh; display:flex; align-items:center; justify-content:center;
+       background:linear-gradient(135deg,#1e293b 0%,#334155 100%); }
+.login-card { background:#fff; padding:40px; border-radius:14px; width:400px;
+              box-shadow:0 20px 50px rgba(0,0,0,.35); }
+.login-card h1 { font-size:22px; color:#0f172a; margin-bottom:4px; }
+.login-card p.sub { color:#64748b; font-size:13px; margin-bottom:24px; }
+label { display:block; font-size:13px; color:#334155; margin:12px 0 6px; font-weight:600; }
+input { width:100%; padding:10px 12px; border:1px solid #cbd5e1; border-radius:8px;
+        font-size:14px; outline:none; }
+input:focus { border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,.15); }
+button { width:100%; margin-top:22px; padding:11px; background:#2563eb; color:#fff;
+         border:none; border-radius:8px; font-size:15px; font-weight:600; cursor:pointer; }
+button:hover { background:#1d4ed8; }
+button:disabled { background:#94a3b8; cursor:not-allowed; }
+.error { margin-top:14px; padding:10px; border-radius:8px; font-size:13px;
+         background:#fee2e2; color:#991b1b; display:none; }
+.hint { margin-top:18px; padding:12px; background:#f1f5f9; border-radius:8px;
+        font-size:12px; color:#475569; line-height:1.6; }
+.hint b { color:#0f172a; }
+</style>
+</head>
+<body>
+<div class="login-card">
+  <h1>SPIS Login Page</h1>
+  <p class="sub">Sign in to continue</p>
+
+  <form id="loginForm">
+    <label for="username">Username</label>
+    <input type="text" id="username" autocomplete="username" required>
+
+    <label for="password">Password</label>
+    <input type="password" id="password" autocomplete="current-password" required>
+
+    <button type="submit" id="loginBtn">Sign In</button>
+    <div class="error" id="errorMsg"></div>
+  </form>
+
+  <div class="hint">
+    <b>Demo accounts</b> (seed via <code>ml/seed_demo.sql</code>):<br>
+    • admin / admin123 — ADMIN<br>
+    • faculty1 / faculty123 — FACULTY<br>
+    • student1 / student123 — STUDENT
+  </div>
+</div>
+
+<script>
+const API = 'http://localhost:8080';
+
+function showError(msg) {
+  const el = document.getElementById('errorMsg');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true;
+  btn.textContent = 'Signing in…';
+  document.getElementById('errorMsg').style.display = 'none';
+
+  try {
+    const res = await fetch(API + '/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: document.getElementById('username').value.trim(),
+        password: document.getElementById('password').value
+      })
+    });
+
+    if (!res.ok) {
+      if (res.status === 401) {
+        showError('Invalid username or password.');
+      } else {
+        showError('Login failed (HTTP ' + res.status + ').');
+      }
+      return;
+    }
+
+    const data = await res.json();
+    if (!data.token || !data.role) {
+      showError('Unexpected login response.');
+      return;
+    }
+
+    sessionStorage.setItem('spis_token', data.token);
+    sessionStorage.setItem('spis_role', data.role);
+    sessionStorage.setItem('spis_username', data.username);
+    // All roles share one SPA shell now.
+    window.location.href = 'index.html';
+  } catch (err) {
+    showError('Cannot reach the server. Is the backend running on :8080?');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Sign In';
+  }
+});
+</script>
+</body>
+</html>
